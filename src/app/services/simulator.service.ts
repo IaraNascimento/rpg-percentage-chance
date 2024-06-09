@@ -107,9 +107,10 @@ export class SimulatorService {
     return { success, finalValue, mainDie };
   }
 
-  public multCalcRoll(data: IInformation): any {
+  public multCalcRoll(data: IInformation): ICalcResults {
     let amountOfSuccesses: number = 0;
     let amountOfCrits: number = 0;
+    let criticsFail: number = 0;
     let finalValueAvg: number = 0;
     let finalValues: number[] = [];
 
@@ -128,8 +129,13 @@ export class SimulatorService {
 
       finalValueAvg += result.finalValue;
       finalValues.push(result.finalValue);
+
       if (result.mainDie === data.max_main_die) {
         amountOfCrits += 1;
+      }
+
+      if (result.mainDie === 1) {
+        criticsFail += 1;
       }
 
       if (result.success) {
@@ -145,7 +151,9 @@ export class SimulatorService {
       successes: amountOfSuccesses,
       successPercentage: amountOfSuccesses / (data.rolls as number),
       critics: amountOfCrits,
-      criticPercentage: amountOfCrits / amountOfSuccesses,
+      criticPercentage: amountOfCrits / (data.rolls as number),
+      criticsFail: criticsFail,
+      criticFailPercentage: criticsFail / (data.rolls as number),
       averageRoll: finalValueAvg,
       standardDeviation: stdDev,
     };

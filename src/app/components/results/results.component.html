@@ -32,8 +32,61 @@
     </ul>
   </div>
   <div class="card-content grey lighten-4">
-    <div id="success">Batatinha</div>
-    <div id="critics">Arroz</div>
-    <div id="criticsFail">Feijão</div>
+    <div id="success">
+      <p>
+        Um <strong>sucesso</strong> numa rolagem de dados ocorre quando o
+        resultado do dado <strong>atende ou supera</strong> uma dificuldade
+        predefinida.
+      </p>
+      <br />
+      <span *ngIf="results.successes">
+        <p>
+          Nesse caso, foram {{ parameters.rolls }} dados e
+          <strong>{{ results.successes }}</strong> vezes o d{{
+            parameters.max_main_die
+          }}
+          atingiu um valor igual ou maior que {{ parameters.target }} com os
+          parâmetros extras.
+        </p>
+        <p>
+          ~ <strong>SUCESSO</strong> = ( <strong>rolagem</strong> +
+          <strong>modificadores</strong> + <strong>rolagens bônus</strong> -
+          <strong>rolagens penalidade</strong>) é maior ou igual que
+          <strong>dificuldade</strong>.
+        </p>
+        <p>
+          ~ <strong>ROLAGEM</strong> = Rolagem do
+          <strong>dado principal</strong>, mas no caso de vantagem são 2
+          rolagens pegando o maior e no caso de desvantagem pega o menor dentre
+          os dois dados.
+        </p>
+      </span>
+    </div>
+    <div id="critics">
+      <p>
+        Um <strong>sucesso crítico</strong> acontece quando o jogador obtém o
+        melhor resultado possível exclusivamente na rolagem do dado. Por
+        exemplo, um resultado de 20 em um dado de 20 lados (d20).
+      </p>
+      <br />
+      <p *ngIf="results.critics">
+        Nesse caso, o valor de
+        <strong>{{ parameters.max_main_die }}</strong> foi tirado
+        <strong>{{ results.critics }}</strong> vezes.
+      </p>
+    </div>
+    <div id="criticsFail">
+      <p>
+        Uma falha crítica numa rolagem de dado ocorre quando o jogador obtém o
+        pior resultado possível no dado, ou seja, <strong>1</strong> nos dados
+        tradicionais.
+      </p>
+      <br />
+      <p *ngIf="results.criticsFail">
+        Nesse caso, o valor de
+        <strong>1</strong> foi tirado
+        <strong>{{ results.criticsFail }}</strong> vezes.
+      </p>
+    </div>
   </div>
 </div>

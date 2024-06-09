@@ -1,162 +1,20 @@
 <main class="container">
   <br />
-  <br />
-  <div class="row">
-    <form class="col s12">
-      <div class="row">
-        <div class="input-field col s3">
-          <input
-            id="rolls"
-            type="number"
-            [value]="initialValues.rolls"
-            (input)="defineData('rolls', $event, true, true)"
-          />
-          <label for="rolls">Quantidade de rolagens</label>
-        </div>
-        <div class="input-field col s3">
-          <app-select
-            [index]="1"
-            [id]="'max_main_die'"
-            [options]="dicesList"
-            [initialValue]="defaulDie"
-            label="dado principal"
-            (selected)="defineData('max_main_die', $event.value)"
-          />
-        </div>
-        <div class="input-field col s3">
-          <input
-            id="target"
-            type="number"
-            [value]="initialValues.target"
-            (input)="defineData('target', $event, true, true)"
-          />
-          <label for="target">dificuldade</label>
-        </div>
-        <div class="input-field col s3">
-          <input
-            id="modifier"
-            type="number"
-            [value]="initialValues.modifier"
-            (input)="defineData('modifier', $event, true, true)"
-          />
-          <label for="modifier">modificadores</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s3">
-          <app-switch
-            [labelOn]="'maior'"
-            [labelOff]="'menor'"
-            [initialValue]="!!initialValues.success_is_bigger"
-            (value)="defineData('success_is_bigger', $event)"
-          />
-        </div>
-        <div class="input-field col s3">
-          <app-switch
-            [labelOn]="'vantagem'"
-            [labelOff]="'não'"
-            [initialValue]="!!initialValues.has_advantage"
-            (value)="defineData('has_advantage', $event)"
-          />
-        </div>
-        <div class="input-field col s3">
-          <app-switch
-            [labelOn]="'desvantagem'"
-            [labelOff]="'não'"
-            [initialValue]="!!initialValues.has_disadvantage"
-            (value)="defineData('has_disadvantage', $event)"
-          />
-        </div>
-        <div class="input-field col s3">
-          <app-switch
-            [labelOn]="'CA'"
-            [labelOff]="'CD'"
-            [initialValue]="!!initialValues.nat_max_auto_success"
-            (value)="
-              defineData('nat_max_auto_success', $event);
-              defineData('nat_min_auto_fail', $event)
-            "
-          />
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s4">
-          <button id="btn_extra_bonus" class="btn blue" (click)="addExtraDie()">
-            + dado bônus
-          </button>
-          <br />
-          <br />
-          <button
-            *ngIf="data.extra_dices?.length"
-            [id]="'btn_remove_extra_bonus'"
-            class="btn red"
-            (click)="removeExtraDices()"
-          >
-            apagar dados bônus
-          </button>
-        </div>
-        <div class="col s8">
-          <div class="row" *ngIf="data.extra_dices?.length">
-            @for(opt of data.extra_dices; track i; let i = $index;){
-            <div class="col s4">
-              <app-select
-                [index]="'extra_bonus_' + i"
-                [id]="'extra_bonus_' + i"
-                [options]="dicesList"
-                label="dado bônus {{ i + 1 }}"
-                (selected)="redefineExtraDie('extra', i, $event)"
-              />
-            </div>
-            }
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s4">
-          <button
-            id="btn_extra_penault"
-            class="btn pink"
-            (click)="addPenaultDie()"
-          >
-            + dado de penalidade
-          </button>
-          <br />
-          <br />
-          <button
-            *ngIf="data.penault_dices?.length"
-            [id]="'btn_remove_extra_penault'"
-            class="btn red"
-            (click)="removePenaultDices()"
-          >
-            apagar dados bônus
-          </button>
-        </div>
-        <div class="col s8">
-          <div class="row" *ngIf="data.penault_dices?.length">
-            @for(opt of data.penault_dices; track i; let i = $index;){
-            <div class="input-field col s4">
-              <app-select
-                [index]="'extra_penault_' + i"
-                [id]="'extra_penault_' + i"
-                [options]="dicesList"
-                label="dado penalidade {{ i + 1 }}"
-                (selected)="redefineExtraDie('penault', i, $event)"
-              />
-            </div>
-            }
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12 right-align">
-          <button id="calculate" class="btn" (click)="calculate(data)">
-            calcular
-          </button>
-        </div>
-      </div>
-    </form>
+  <ul class="tabs">
+    <li class="tab"><a href="#a">Rolagem simples</a></li>
+    <li class="tab"><a href="#b">Rolagem estatística</a></li>
+  </ul>
+  <div id="a">
+    <br />
+    <app-roll-dices />
+    <br />
+    <br />
   </div>
-  <app-results [results]="results" />
+  <div id="b">
+    <br />
+    <h4>Rolagem estatística: EM DESENVOLVIMENTO</h4>
+    <br />
+    <br />
+  </div>
+  <br />
 </main>
-<br />
-<br />

@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { ICalcResults } from '../../services/simulator.service';
+import { ICalcResults, IInformation } from '../../services/simulator.service';
 
 interface IResultsComponent {
   results: ICalcResults;
+  parameters: IInformation;
 }
 
 @Component({
@@ -12,6 +13,7 @@ interface IResultsComponent {
 })
 export class ResultsComponent implements IResultsComponent {
   @Input() results: ICalcResults = {};
+  @Input() parameters: IInformation = {};
 
   ngAfterViewInit(): void {
     this.startsTabsFromMaterialize();
