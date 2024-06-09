@@ -1,0 +1,16 @@
+<select
+  [name]="id"
+  [id]="id"
+  (change)="selectOpt($event, listOfOptions)"
+  [(value)]="initialValue"
+>
+  <option
+    *ngFor="let opt of listOfOptions; let i = index"
+    [id]="id + '_' + opt.value"
+    [value]="opt.value"
+    [selected]="opt.selected === true"
+  >
+    {{ opt.label }}
+  </option>
+</select>
+<label class="select-label" [for]="id">{{ label }}</label>

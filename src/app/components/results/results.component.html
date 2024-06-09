@@ -1,0 +1,39 @@
+<div class="card">
+  <div class="card-content blue flow-text">
+    <p *ngIf="!results.successes">
+      Preencha os parâmetros como preferir e clique em "CALCULAR".
+    </p>
+    <p *ngIf="results.successes && results.successPercentage">
+      Sucesso:
+      <strong>{{ (results.successPercentage * 100).toFixed(1) }}</strong
+      >% (<strong>{{ results.successes }}</strong
+      >)
+    </p>
+    <p *ngIf="results.critics && results.criticPercentage">
+      Sucesso CRÍTICO:
+      <strong>{{ (results.criticPercentage * 100).toFixed(1) }}</strong
+      >% (<strong>{{ results.critics }}</strong
+      >)
+    </p>
+    <p *ngIf="results.criticsFail && results.criticFailPercentage">
+      Fracasso CRÍTICO:
+      <strong>{{ (results.criticFailPercentage * 100).toFixed(1) }}</strong
+      >% (<strong>{{ results.criticsFail }}</strong
+      >)
+    </p>
+  </div>
+  <div class="card-tabs">
+    <ul class="tabs tabs-fixed-width blue">
+      <li class="tab"><a class="white-text" href="#success">Sucesso</a></li>
+      <li class="tab"><a class="white-text" href="#critics">Crítico</a></li>
+      <li class="tab">
+        <a class="white-text" href="#criticsFail">Falha Crítica</a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-content grey lighten-4">
+    <div id="success">Batatinha</div>
+    <div id="critics">Arroz</div>
+    <div id="criticsFail">Feijão</div>
+  </div>
+</div>

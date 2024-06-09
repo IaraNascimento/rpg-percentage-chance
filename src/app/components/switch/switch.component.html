@@ -1,0 +1,12 @@
+<div class="switch" [id]="'switch_' + labelOn + '_' + labelOff">
+  <label [id]="'label_' + labelOn + '_' + labelOff">
+    {{ labelOff }}
+    <input
+      type="checkbox"
+      (change)="selectOpt($event)"
+      [ngModel]="initialValue"
+    />
+    <span class="lever"></span>
+    {{ labelOn }}
+  </label>
+</div>
