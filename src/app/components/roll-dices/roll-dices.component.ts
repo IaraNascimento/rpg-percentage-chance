@@ -124,6 +124,11 @@ export class RollDicesComponent implements OnInit, AfterViewInit {
     if (num) {
       normalizedValue = Number(normalizedValue);
     }
+    if (attr === 'max_main_die') {
+      const newTarget = Math.floor(normalizedValue / 2) + 1;
+      this.initialValues.target = newTarget;
+      this.defineData('target', newTarget);
+    }
     this.data = {
       ...this.data,
       ...({ [attr]: normalizedValue } as IInformation),

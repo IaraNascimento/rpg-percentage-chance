@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import {
   Component,
   AfterViewInit,
@@ -43,11 +42,16 @@ export class SelectComponent
   constructor() {}
 
   ngOnInit(): void {
+    this.listOfOptions = JSON.parse(JSON.stringify(this.options));
     if (!this.initialValue) {
-      this.initialValue = JSON.parse(JSON.stringify(this.options[0]));
+      this.initialValue = JSON.parse(JSON.stringify(this.listOfOptions[0]));
     }
-    console.log('again');
-    this.setSelected(this.options, this.initialValue as ISelectOption);
+    this.listOfOptions.map((el) => {
+      if (el.value == this.initialValue?.value) {
+        el.selected = true;
+      }
+      return el;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -60,33 +64,13 @@ export class SelectComponent
     M.updateTextFields();
   }
 
-  public setSelected(list: Array<ISelectOption>, choosen: ISelectOption) {
-    this.listOfOptions = JSON.parse(JSON.stringify(list));
-    const aux = this.listOfOptions.map((item) => {
-      item.selected = false;
-      if (item.value == choosen.value) {
-        item.selected = true;
-      }
-      return item;
-    });
-    this.listOfOptions = aux;
-  }
-
-  public selectOpt(target: Event | null, list: Array<ISelectOption>): void {
-    const copyList: Array<ISelectOption> = JSON.parse(JSON.stringify(list));
-    const foundEl: ISelectOption | undefined = copyList.find(
-      (item: ISelectOption) => item.value == (target?.target as any).value
-    );
-    if (foundEl) {
-      this.setSelected(copyList, foundEl);
+  public sendSelected(event: Event, list: Array<ISelectOption>): void {
+    const value = (event?.target as any).value;
+    let selectedItem: ISelectOption = this.initialValue as ISelectOption;
+    const found = list.find((el) => el.value == value);
+    if (found) {
+      selectedItem = found;
     }
-    if (target && foundEl) {
-      const foundSelected = JSON.parse(JSON.stringify(this.listOfOptions)).find(
-        (item: ISelectOption) => item.selected
-      );
-      if (foundSelected) {
-        this.selected.emit(foundSelected);
-      }
-    }
+    this.selected.emit(selectedItem);
   }
 }
