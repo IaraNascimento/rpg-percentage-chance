@@ -1,0 +1,86 @@
+<div class="card">
+  <div class="card-content green flow-text white-text">Estatísticas!</div>
+  <div class="card-tabs">
+    <ul class="tabs tabs-fixed-width green">
+      <li class="tab">
+        <a class="white-text" href="#a">Resultado do dado</a>
+      </li>
+      <li class="tab">
+        <a class="white-text" href="#b">Valor Final ("dano")</a>
+      </li>
+      <li class="tab">
+        <a class="white-text" href="#c">Explicação</a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-content grey lighten-4">
+    <div id="a">
+      <app-statistcs-values
+        [results]="results"
+        [statistics]="statisticsFromDices"
+      />
+    </div>
+    <div id="b">
+      <app-statistcs-values
+        [results]="results"
+        [statistics]="statisticsFromResult"
+      />
+    </div>
+    <div id="c">
+      <p>
+        O <strong>dano</strong> ou resultado é o valor total após incluir
+        modificadores, dados extras, vantagen ou desvantagem, etc.
+      </p>
+      <br />
+      <hr />
+      <br />
+      <p>
+        O <strong>menor</strong> foi o menor valor tirado no dado ou o menor
+        valor calculado de "dano".
+      </p>
+      <br />
+      <hr />
+      <br />
+      <p>
+        O <strong>maior</strong> foi o maior valor tirado no dado ou o maior
+        valor calculado de "dano".
+      </p>
+      <br />
+      <hr />
+      <br />
+      <p>
+        A <strong>mediana</strong> é uma medida estatística que mostra o valor
+        do meio de uma lista de valores.
+      </p>
+      <br />
+      <hr />
+      <br />
+      <p>
+        A <strong>média</strong> de uma lista de valores é uma medida
+        estatística que representa a soma de todos os elementos da lista
+        dividida pelo número total de elementos. Em outras palavras, ela fornece
+        uma ideia do valor central ou típico dos dados.
+      </p>
+      <p>
+        <strong>Média</strong> = (Soma dos valores) / (Quantidade de valores).
+      </p>
+      <br />
+      <hr />
+      <br />
+      <p>
+        O <strong>desvio padrão</strong> quantifica a dispersão dos valores em
+        um conjunto de dados em relação à média. Ele indica o quão próximos ou
+        distantes os valores estão da média. O desvio padrão é importante para
+        avaliar a variabilidade dos dados.
+      </p>
+      <br />
+      <hr />
+      <br />
+      <p>
+        A <strong>moda</strong> identifica o valor mais frequente em um conjunto
+        de dados. Em outras palavras, é o número de vezes que o número aparece.
+      </p>
+      <br />
+    </div>
+  </div>
+</div>

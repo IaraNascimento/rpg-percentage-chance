@@ -18,7 +18,8 @@ export class RollDicesComponent implements OnInit {
 
   public data: IInformation = {};
   public results: ICalcResults = {};
-  public statistics: IStatistcs = {};
+  public statisticsFromDices: IStatistcs = {};
+  public statisticsFromResult: IStatistcs = {};
 
   public initialValues: IInformation = {
     rolls: 15000,
@@ -102,13 +103,19 @@ export class RollDicesComponent implements OnInit {
     }
   }
 
+  public resetResultsAndStatistics() {
+    this.results = {};
+    this.statisticsFromDices = {};
+    this.statisticsFromResult = {};
+  }
+
   public defineData(
     attr: string,
     value: any,
     num?: boolean,
     normalize?: boolean
   ): void {
-    this.results = {};
+    this.resetResultsAndStatistics();
     let normalizedValue = value;
     if (normalize) {
       normalizedValue = value.target.value;
@@ -150,7 +157,14 @@ export class RollDicesComponent implements OnInit {
       ),
     };
     this.results = this.simulator.multCalcRoll(normalized);
-    this.statistics = this.simulator.calcStatistcs(normalized, this.results);
+    this.statisticsFromDices = this.simulator.calcStatistcs(
+      normalized,
+      this.results.allRolls ? this.results.allRolls : [0]
+    );
+    this.statisticsFromResult = this.simulator.calcStatistcs(
+      normalized,
+      this.results.allValues ? this.results.allValues : [0]
+    );
     this.scrollBottom();
   }
 

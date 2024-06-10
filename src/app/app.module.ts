@@ -13,6 +13,8 @@ import { SelectComponent } from './components/select/select.component';
 import { SwitchComponent } from './components/switch/switch.component';
 import { RollDicesComponent } from './components/roll-dices/roll-dices.component';
 import { ResultsComponent } from './components/results/results.component';
+import { ResultsStatisticsComponent } from './components/results-statistics/results-statistics.component';
+import { StatistcsValuesComponent } from './components/statistcs-values/statistcs-values.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { ResultsComponent } from './components/results/results.component';
     SwitchComponent,
     RollDicesComponent,
     ResultsComponent,
+    ResultsStatisticsComponent,
+    StatistcsValuesComponent,
   ],
   imports: [BrowserModule, CommonModule, FormsModule, RouterOutlet, NgFor],
   providers: [SimulatorService],

@@ -8,7 +8,7 @@
           [value]="initialValues.rolls"
           (input)="defineData('rolls', $event, true, true)"
         />
-        <label for="rolls">Quantidade de rolagens</label>
+        <label for="rolls">quantidade de rolagens</label>
       </div>
       <div class="input-field col s3">
         <app-select
@@ -156,9 +156,9 @@
     </div>
   </form>
 </div>
-<app-results
-  id="destinationScroll"
+<app-results id="destinationScroll" [results]="results" [parameters]="data" />
+<app-results-statistics
   [results]="results"
-  [parameters]="data"
-  [statistics]="statistics"
+  [statisticsFromDices]="statisticsFromDices"
+  [statisticsFromResult]="statisticsFromResult"
 />

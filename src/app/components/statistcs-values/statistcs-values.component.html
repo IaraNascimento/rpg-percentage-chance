@@ -1,0 +1,73 @@
+<div class="row">
+  <h5 class="col s4" *ngIf="statistics.min">
+    Menor: <strong>{{ statistics.min }}</strong>
+  </h5>
+  <h5 class="col s4" *ngIf="statistics.max">
+    Maior:
+    <strong>{{ statistics.max }}</strong>
+  </h5>
+  <h5 class="col s4" *ngIf="statistics.mediam">
+    Mediana: <strong>{{ statistics.mediam }}</strong>
+  </h5>
+  <h5 class="col s4" *ngIf="statistics.mean">
+    Média: <strong>{{ statistics.mean.toFixed(1) }}</strong>
+  </h5>
+  <h5 class="col s4" *ngIf="statistics.desvPad">
+    Desvio:
+    <strong>{{ statistics.desvPad.toFixed(1) }}</strong>
+  </h5>
+  <h5 class="col s4" *ngIf="statistics.mode">
+    <span *ngFor="let mode of statistics.mode; let i = index">
+      <span *ngIf="i > 0">, </span>
+      Moda ({{ i }}): <strong>{{ mode }}</strong>
+    </span>
+  </h5>
+</div>
+<br />
+<button
+  *ngIf="!seeAllRolls && statistics.sum"
+  class="btn"
+  (click)="toggleViewResults(true)"
+>
+  Ver resultados
+</button>
+<span *ngIf="seeAllRolls && statistics.sum">
+  <button class="btn pink" (click)="toggleViewResults(false)">
+    Esconder resultados
+  </button>
+  <button
+    *ngIf="!seeMinificated"
+    class="btn margin-left blue"
+    (click)="toggleViewMinificated(true, this.statistics.list)"
+  >
+    Minificar
+  </button>
+  <button
+    *ngIf="seeMinificated"
+    class="btn margin-left blue"
+    (click)="toggleViewMinificated(false, this.statistics.list)"
+  >
+    Ver dados brutos
+  </button>
+  <br />
+  <br />
+  <div class="row">
+    <div
+      class="col"
+      [ngClass]="{ s1: !seeMinificated, s2: seeMinificated }"
+      *ngFor="let result of rollsResults; let i = index"
+    >
+      <div class="custom-small card">
+        <div class="card-content center-align">
+          <span *ngIf="seeMinificated && statistics.list"
+            ><strong>{{ result.value }}</strong> ( x
+            {{ result.quantity }} )<br />
+            {{ ((result.quantity * 100) / statistics.list.length).toFixed(2) }}
+            %</span
+          >
+          <span *ngIf="!seeMinificated">{{ result }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</span>

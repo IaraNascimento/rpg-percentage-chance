@@ -29,10 +29,14 @@ export interface ICalcResults {
   criticPercentage?: number;
   criticsFail?: number;
   criticFailPercentage?: number;
+  allRolls?: Array<number>;
   allValues?: Array<number>;
 }
 
 export interface IStatistcs {
+  list?: Array<number>;
+  min?: number;
+  max?: number;
   sum?: number;
   mean?: number;
   desvPad?: number;
@@ -119,6 +123,9 @@ export class SimulatorService {
     let amountOfCrits: number = 0;
     let criticsFail: number = 0;
     let finalValues: Array<number> = [];
+    let finalDices: Array<number> = [];
+    let min: number | null = null;
+    let max: number | null = null;
 
     for (let i = 0; i < (data.rolls as number); i++) {
       const result = this.calcRoll(
@@ -132,6 +139,8 @@ export class SimulatorService {
         data.nat_min_auto_fail as boolean,
         data.success_is_bigger as boolean
       );
+
+      finalDices.push(result.mainDie);
 
       finalValues.push(result.finalValue);
 
@@ -155,6 +164,7 @@ export class SimulatorService {
       criticPercentage: amountOfCrits / (data.rolls as number),
       criticsFail: criticsFail,
       criticFailPercentage: criticsFail / (data.rolls as number),
+      allRolls: finalDices,
       allValues: finalValues,
     };
   }
@@ -179,7 +189,9 @@ export class SimulatorService {
   }
 
   public calcMediam(list: Array<number>): number {
-    const sortedList = list.slice().sort((a, b) => a - b);
+    const sortedList = JSON.parse(JSON.stringify(list))
+      .slice()
+      .sort((a: any, b: any) => a - b);
     const middleIndex = Math.floor(sortedList.length / 2);
 
     if (sortedList.length % 2 !== 0) {
@@ -216,22 +228,29 @@ export class SimulatorService {
     return modes;
   }
 
-  public calcStatistcs(data: IInformation, results: ICalcResults): IStatistcs {
-    const sum: number = this.calcSum(
-      results.allValues?.length ? results.allValues : [0]
+  public getMin(list: Array<number>): number {
+    const normalizedList = JSON.parse(JSON.stringify(list)).sort(
+      (a: number, b: number) => Number(a) - Number(b)
     );
-    const mean: number = this.calcMean(sum, data.rolls ? data.rolls : 1);
-    const desvPad: number = this.calcDesvPad(
-      mean,
-      results.allValues?.length ? results.allValues : [0]
-    );
-    const mediam: number = this.calcMediam(
-      results.allValues?.length ? results.allValues : [0]
-    );
-    const mode: Array<number> = this.calcMode(
-      results.allValues?.length ? results.allValues : [0]
-    );
+    return normalizedList[0];
+  }
 
-    return { sum, mean, desvPad, mediam, mode };
+  public getMax(list: Array<number>): number {
+    const normalizedList = JSON.parse(JSON.stringify(list)).sort(
+      (a: number, b: number) => Number(a) - Number(b)
+    );
+    return normalizedList[normalizedList.length - 1];
+  }
+
+  public calcStatistcs(data: IInformation, list: Array<number>): IStatistcs {
+    const min: number = this.getMin(list?.length ? list : [0]);
+    const max: number = this.getMax(list?.length ? list : [0]);
+    const sum: number = this.calcSum(list?.length ? list : [0]);
+    const mean: number = this.calcMean(sum, data.rolls ? data.rolls : 1);
+    const desvPad: number = this.calcDesvPad(mean, list?.length ? list : [0]);
+    const mediam: number = this.calcMediam(list?.length ? list : [0]);
+    const mode: Array<number> = this.calcMode(list?.length ? list : [0]);
+
+    return { list, min, max, sum, mean, desvPad, mediam, mode };
   }
 }
