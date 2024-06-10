@@ -11,7 +11,6 @@ export class AppComponent implements AfterViewInit {
   }
 
   public startsTabsFromMaterialize(): void {
-    const el = document.querySelectorAll('.tabs');
-    M.Tabs.init(el, {});
+    M.updateTextFields();
   }
 }

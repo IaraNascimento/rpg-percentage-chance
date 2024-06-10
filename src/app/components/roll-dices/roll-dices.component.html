@@ -14,7 +14,7 @@
         <app-select
           [index]="9999"
           [id]="'max_main_die'"
-          [options]="dicesList"
+          [options]="copyDicesList"
           [initialValue]="defaulDie"
           label="dado principal"
           (selected)="defineData('max_main_die', $event.value)"
@@ -68,7 +68,12 @@
         <app-switch
           [labelOn]="'CA'"
           [labelOff]="'CD'"
-          [initialValue]="!!initialValues.nat_max_auto_success"
+          [initialValue]="
+            !!(
+              initialValues.nat_max_auto_success &&
+              initialValues.nat_min_auto_fail
+            )
+          "
           (value)="
             defineData('nat_max_auto_success', $event);
             defineData('nat_min_auto_fail', $event)
@@ -99,7 +104,7 @@
             <app-select
               [index]="'extra_bonus_' + i"
               [id]="'extra_bonus_' + i"
-              [options]="dicesList"
+              [options]="copyDicesList"
               label="dado bônus {{ i + 1 }}"
               (selected)="redefineExtraDie('extra', i, $event)"
             />
@@ -135,7 +140,7 @@
             <app-select
               [index]="'extra_penault_' + i"
               [id]="'extra_penault_' + i"
-              [options]="dicesList"
+              [options]="copyDicesList"
               label="dado penalidade {{ i + 1 }}"
               (selected)="redefineExtraDie('penault', i, $event)"
             />
@@ -144,13 +149,16 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="input-field col s12 right-align">
-        <button id="calculate" class="btn" (click)="calculate(data)">
-          calcular
-        </button>
-      </div>
+    <div class="right-align">
+      <button id="calculate " class="btn" (click)="calculate(data)">
+        calcular
+      </button>
     </div>
   </form>
 </div>
-<app-results id="destinationScroll" [results]="results" [parameters]="data" />
+<app-results
+  id="destinationScroll"
+  [results]="results"
+  [parameters]="data"
+  [statistics]="statistics"
+/>

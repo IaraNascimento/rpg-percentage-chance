@@ -29,8 +29,15 @@ export interface ICalcResults {
   criticPercentage?: number;
   criticsFail?: number;
   criticFailPercentage?: number;
-  averageRoll?: number;
-  standardDeviation?: number;
+  allValues?: Array<number>;
+}
+
+export interface IStatistcs {
+  sum?: number;
+  mean?: number;
+  desvPad?: number;
+  mediam?: number;
+  mode?: Array<number>;
 }
 
 @Injectable({
@@ -111,8 +118,7 @@ export class SimulatorService {
     let amountOfSuccesses: number = 0;
     let amountOfCrits: number = 0;
     let criticsFail: number = 0;
-    let finalValueAvg: number = 0;
-    let finalValues: number[] = [];
+    let finalValues: Array<number> = [];
 
     for (let i = 0; i < (data.rolls as number); i++) {
       const result = this.calcRoll(
@@ -127,7 +133,6 @@ export class SimulatorService {
         data.success_is_bigger as boolean
       );
 
-      finalValueAvg += result.finalValue;
       finalValues.push(result.finalValue);
 
       if (result.mainDie === data.max_main_die) {
@@ -143,10 +148,6 @@ export class SimulatorService {
       }
     }
 
-    finalValueAvg = finalValueAvg / (data.rolls as number);
-    const varianceValue = this.variance(finalValues, finalValueAvg);
-    const stdDev = Math.sqrt(varianceValue);
-
     return {
       successes: amountOfSuccesses,
       successPercentage: amountOfSuccesses / (data.rolls as number),
@@ -154,8 +155,83 @@ export class SimulatorService {
       criticPercentage: amountOfCrits / (data.rolls as number),
       criticsFail: criticsFail,
       criticFailPercentage: criticsFail / (data.rolls as number),
-      averageRoll: finalValueAvg,
-      standardDeviation: stdDev,
+      allValues: finalValues,
     };
+  }
+
+  public calcSum(list: Array<number>): number {
+    return list.length
+      ? list.reduce((total, currentValue) => total + currentValue, 0)
+      : 0;
+  }
+
+  public calcMean(sum: number, total: number): number {
+    return sum / total;
+  }
+
+  public calcDesvPad(mean: number, list: Array<number>): number {
+    const squaredDifferences = list.map((num) => Math.pow(num - mean, 2));
+    const averageSquaredDifference = this.calcMean(
+      this.calcSum(squaredDifferences),
+      list.length
+    );
+    return Math.sqrt(averageSquaredDifference);
+  }
+
+  public calcMediam(list: Array<number>): number {
+    const sortedList = list.slice().sort((a, b) => a - b);
+    const middleIndex = Math.floor(sortedList.length / 2);
+
+    if (sortedList.length % 2 !== 0) {
+      return sortedList[middleIndex];
+    } else {
+      return (sortedList[middleIndex - 1] + sortedList[middleIndex]) / 2;
+    }
+  }
+
+  public calcMode(list: Array<number>): Array<number> {
+    const frequencyMap: { [key: number]: number } = {};
+    list.forEach((num) => {
+      if (frequencyMap[num]) {
+        frequencyMap[num]++;
+      } else {
+        frequencyMap[num] = 1;
+      }
+    });
+
+    let maxFrequency = 0;
+    for (const key in frequencyMap) {
+      if (frequencyMap[key] > maxFrequency) {
+        maxFrequency = frequencyMap[key];
+      }
+    }
+
+    const modes: Array<number> = [];
+    for (const key in frequencyMap) {
+      if (frequencyMap[key] === maxFrequency) {
+        modes.push(Number(key));
+      }
+    }
+
+    return modes;
+  }
+
+  public calcStatistcs(data: IInformation, results: ICalcResults): IStatistcs {
+    const sum: number = this.calcSum(
+      results.allValues?.length ? results.allValues : [0]
+    );
+    const mean: number = this.calcMean(sum, data.rolls ? data.rolls : 1);
+    const desvPad: number = this.calcDesvPad(
+      mean,
+      results.allValues?.length ? results.allValues : [0]
+    );
+    const mediam: number = this.calcMediam(
+      results.allValues?.length ? results.allValues : [0]
+    );
+    const mode: Array<number> = this.calcMode(
+      results.allValues?.length ? results.allValues : [0]
+    );
+
+    return { sum, mean, desvPad, mediam, mode };
   }
 }

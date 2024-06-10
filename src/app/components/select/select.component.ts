@@ -61,7 +61,6 @@ export class SelectComponent
   public startsSelectFromMaterialize(): void {
     var elems = document.querySelectorAll('select');
     M.FormSelect.init(elems, {});
-    M.updateTextFields();
   }
 
   public sendSelected(event: Event, list: Array<ISelectOption>): void {

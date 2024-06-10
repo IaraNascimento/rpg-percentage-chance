@@ -3,31 +3,79 @@
     <p *ngIf="!results.successes && !results.critics && !results.criticsFail">
       Preencha os parâmetros e clique em "CALCULAR".
     </p>
-    <p *ngIf="results.successes && results.successPercentage">
-      Sucesso:
-      <strong>{{ (results.successPercentage * 100).toFixed(1) }}</strong
-      >% (<strong>{{ results.successes }}</strong
-      >)
-    </p>
-    <p *ngIf="results.critics && results.criticPercentage">
-      Sucesso CRÍTICO:
-      <strong>{{ (results.criticPercentage * 100).toFixed(1) }}</strong
-      >% (<strong>{{ results.critics }}</strong
-      >)
-    </p>
-    <p *ngIf="results.criticsFail && results.criticFailPercentage">
-      Fracasso CRÍTICO:
-      <strong>{{ (results.criticFailPercentage * 100).toFixed(1) }}</strong
-      >% (<strong>{{ results.criticsFail }}</strong
-      >)
-    </p>
+    <div class="row">
+      <div class="col s6">
+        <p *ngIf="results.successes && results.successPercentage">
+          Sucesso:
+          <strong>{{ (results.successPercentage * 100).toFixed(1) }}</strong
+          >% (<strong>{{ results.successes }}</strong
+          >)
+        </p>
+        <p
+          *ngIf="
+            results.critics &&
+            results.criticPercentage &&
+            parameters.nat_max_auto_success
+          "
+        >
+          Sucesso CRÍTICO:
+          <strong>{{ (results.criticPercentage * 100).toFixed(1) }}</strong
+          >% (<strong>{{ results.critics }}</strong
+          >)
+        </p>
+        <p
+          *ngIf="
+            results.criticsFail &&
+            results.criticFailPercentage &&
+            parameters.nat_min_auto_fail
+          "
+        >
+          Fracasso CRÍTICO:
+          <strong>{{ (results.criticFailPercentage * 100).toFixed(1) }}</strong
+          >% (<strong>{{ results.criticsFail }}</strong
+          >)
+        </p>
+      </div>
+      <div class="col s6">
+        <div class="row">
+          <p
+            class="col s12"
+            *ngIf="
+              statistics.mean || statistics.mode?.length || statistics.mediam
+            "
+          >
+            Estatísticas:
+          </p>
+          <p class="col s6" *ngIf="statistics.mean">
+            Média: <strong>{{ statistics.mean.toFixed(1) }}</strong>
+          </p>
+          <p class="col s6" *ngIf="statistics.desvPad">
+            Desvio: <strong>{{ statistics.desvPad.toFixed(1) }}</strong>
+          </p>
+          <p class="col s6" *ngIf="statistics.mode">
+            <span *ngFor="let mode of statistics.mode; let i = index">
+              <span *ngIf="i > 0">, </span>
+              Moda ({{ i }}): <strong>{{ mode }}</strong>
+            </span>
+          </p>
+          <p class="col s6" *ngIf="statistics.mediam">
+            Mediana: <strong>{{ statistics.mediam }}</strong>
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="card-tabs">
     <ul class="tabs tabs-fixed-width blue">
       <li class="tab"><a class="white-text" href="#success">Sucesso</a></li>
-      <li class="tab"><a class="white-text" href="#critics">Crítico</a></li>
+      <li class="tab">
+        <a class="white-text" href="#critics">Crítico</a>
+      </li>
       <li class="tab">
         <a class="white-text" href="#criticsFail">Falha Crítica</a>
+      </li>
+      <li class="tab">
+        <a class="white-text" href="#statistics">Estatísticas</a>
       </li>
     </ul>
   </div>
@@ -69,7 +117,7 @@
         exemplo, um resultado de 20 em um dado de 20 lados (d20).
       </p>
       <br />
-      <p *ngIf="results.critics">
+      <p *ngIf="results.critics && parameters.nat_max_auto_success">
         Nesse caso, o valor de
         <strong>{{ parameters.max_main_die }}</strong> foi tirado
         <strong>{{ results.critics }}</strong> vezes.
@@ -82,11 +130,94 @@
         tradicionais.
       </p>
       <br />
-      <p *ngIf="results.criticsFail">
+      <p *ngIf="results.criticsFail && parameters.nat_min_auto_fail">
         Nesse caso, o valor de
         <strong>1</strong> foi tirado
         <strong>{{ results.criticsFail }}</strong> vezes.
       </p>
+    </div>
+    <div id="statistics">
+      <p>
+        A <strong>média</strong> de uma lista de valores é uma medida
+        estatística que representa a soma de todos os elementos da lista
+        dividida pelo número total de elementos. Em outras palavras, ela fornece
+        uma ideia do valor central ou típico dos dados.
+      </p>
+      <p>
+        <strong>Média</strong> = (Soma dos valores) / (Quantidade de valores).
+      </p>
+      <br />
+      <p *ngIf="statistics.mean">
+        Nesse caso, temos: <strong>{{ statistics.sum }}</strong> /
+        <strong>{{ results.allValues?.length }}</strong> =
+        <strong>{{ statistics.mean.toFixed(1) }}</strong>
+      </p>
+      <br />
+      <hr />
+      <br />
+      <p>
+        O <strong>desvio padrão</strong> é uma medida estatística que quantifica
+        a dispersão dos valores em um conjunto de dados em relação à média. Ele
+        indica o quão próximos ou distantes os valores estão da média. O desvio
+        padrão é importante para avaliar a variabilidade dos dados.
+      </p>
+      <br />
+      <hr />
+      <br />
+      <p>
+        A <strong>moda</strong> é uma medida estatística que identifica o valor
+        mais frequente em um conjunto de dados. Em outras palavras, é o número
+        de vezes que o número aparece.
+      </p>
+      <br />
+      <hr />
+      <br />
+      <br />
+      <button
+        *ngIf="!seeAllRolls && statistics.sum"
+        class="btn"
+        (click)="toggleViewResults(true)"
+      >
+        Ver resultados
+      </button>
+      <span *ngIf="seeAllRolls">
+        <button class="btn pink" (click)="toggleViewResults(false)">
+          Esconder resultados
+        </button>
+        <button
+          *ngIf="!seeMinificated"
+          class="btn margin-left blue"
+          (click)="toggleViewMinificated(true)"
+        >
+          Minificar
+        </button>
+        <button
+          *ngIf="seeMinificated"
+          class="btn margin-left blue"
+          (click)="toggleViewMinificated(false)"
+        >
+          Ver dados brutos
+        </button>
+        <br />
+        <br />
+        <div class="row">
+          <div
+            class="col"
+            [ngClass]="{ s1: !seeMinificated, s2: seeMinificated }"
+            *ngFor="let result of rollsResults; let i = index"
+          >
+            <div class="custom-small card">
+              <div class="card-content center-align">
+                <span *ngIf="seeMinificated"
+                  ><strong>{{ result.value }}</strong> ( x
+                  {{ result.quantity }} )</span
+                >
+                <span *ngIf="!seeMinificated">{{ result }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </span>
     </div>
   </div>
 </div>

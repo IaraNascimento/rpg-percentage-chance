@@ -1,28 +1,24 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   IInformation,
   ICalcResults,
   SimulatorService,
+  IStatistcs,
 } from '../../services/simulator.service';
 import { ISelectOption } from '../select/select.component';
+import { dicesList } from '../../utils/utils';
 
 @Component({
   selector: 'app-roll-dices',
   templateUrl: './roll-dices.component.html',
   styleUrl: './roll-dices.component.scss',
 })
-export class RollDicesComponent implements OnInit, AfterViewInit {
-  public data: IInformation = {};
+export class RollDicesComponent implements OnInit {
+  public copyDicesList = JSON.parse(JSON.stringify(dicesList));
 
-  public dicesList: Array<ISelectOption> = [
-    { value: 4, label: '4' },
-    { value: 6, label: '6' },
-    { value: 8, label: '8' },
-    { value: 10, label: '10' },
-    { value: 12, label: '12' },
-    { value: 20, label: '20' },
-    { value: 100, label: '100' },
-  ];
+  public data: IInformation = {};
+  public results: ICalcResults = {};
+  public statistics: IStatistcs = {};
 
   public initialValues: IInformation = {
     rolls: 15000,
@@ -33,14 +29,12 @@ export class RollDicesComponent implements OnInit, AfterViewInit {
     penault_dices: [],
     has_advantage: false,
     has_disadvantage: false,
-    nat_max_auto_success: false,
-    nat_min_auto_fail: false,
+    nat_max_auto_success: true,
+    nat_min_auto_fail: true,
     success_is_bigger: true,
   };
 
   public defaulDie: ISelectOption = { value: -1, label: 'selecione' };
-
-  public results: ICalcResults = {};
 
   constructor(public simulator: SimulatorService) {}
 
@@ -57,12 +51,10 @@ export class RollDicesComponent implements OnInit, AfterViewInit {
     this.defineData('nat_min_auto_fail', this.initialValues.nat_min_auto_fail);
     this.defineData('success_is_bigger', this.initialValues.success_is_bigger);
     this.setDefaultDie(
-      JSON.parse(JSON.stringify(this.dicesList)),
+      JSON.parse(JSON.stringify(dicesList)),
       this.initialValues.max_main_die as number
     );
   }
-
-  ngAfterViewInit(): void {}
 
   public setDefaultDie(list: Array<ISelectOption>, dieValue: string | number) {
     const found: ISelectOption | undefined = list.find(
@@ -73,7 +65,7 @@ export class RollDicesComponent implements OnInit, AfterViewInit {
   }
 
   public addExtraDie(): void {
-    const copy = JSON.parse(JSON.stringify(this.dicesList));
+    const copy = JSON.parse(JSON.stringify(dicesList));
     if (!this.data.extra_dices?.length) {
       this.data.extra_dices = [];
     }
@@ -82,7 +74,7 @@ export class RollDicesComponent implements OnInit, AfterViewInit {
   }
 
   public addPenaultDie(): void {
-    const copy = JSON.parse(JSON.stringify(this.dicesList));
+    const copy = JSON.parse(JSON.stringify(dicesList));
     if (!this.data.penault_dices?.length) {
       this.data.penault_dices = [];
     }
@@ -150,16 +142,15 @@ export class RollDicesComponent implements OnInit, AfterViewInit {
   }
 
   public calculate(dataValues: IInformation): void {
-    let normalized = {
+    let normalized: IInformation = {
       ...dataValues,
       extra: this.getDicesValues(
         dataValues.extra_dices,
         dataValues.penault_dices
       ),
     };
-    console.log(normalized);
     this.results = this.simulator.multCalcRoll(normalized);
-    console.log(this.results);
+    this.statistics = this.simulator.calcStatistcs(normalized, this.results);
     this.scrollBottom();
   }
 
